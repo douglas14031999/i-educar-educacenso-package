@@ -44,4 +44,9 @@
             </tr>
         @endforelse
     </table>
+
+    <div class="separator"></div>
+    <div style="text-align: center; margin-top: 30px; margin-bottom: 30px">
+        <a href="{{ route('educacenso-import-registrations.create') }}" class="btn-green">Nova Importação</a>
+    </div>
 @endsection

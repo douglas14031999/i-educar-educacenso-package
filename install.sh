@@ -56,8 +56,34 @@ echo -e "${BLUE}[4/5] Atualizando o Autoload do Composer...${NC}"
 export COMPOSER_ALLOW_SUPERUSER=1
 composer dump-autoload --optimize
 
-# 6. Limpar caches do Laravel / i-Educar
-echo -e "${BLUE}[5/5] Limpando caches da aplicação...${NC}"
+# 6. Executar migrations e registrar item de menu
+echo -e "${BLUE}[5/6] Executando migrations e ativando item de menu...${NC}"
+if [ -f "artisan" ]; then
+    php artisan migrate --force || true
+    php artisan tinker --execute="
+        \$educacensoMenu = \App\Menu::where('title', 'Educacenso')->first();
+        \$menuImportacao = \App\Menu::where('title', 'Importações')->first();
+        if (\$menuImportacao) {
+            \App\Menu::updateOrCreate(
+                ['process' => 9998849],
+                [
+                    'parent_id' => \$menuImportacao->getKey(),
+                    'title' => 'Importação educacenso',
+                    'description' => 'Importação educacenso',
+                    'link' => '/educacenso/import-registrations/create',
+                    'order' => 0,
+                    'type' => 1,
+                    'parent_old' => 9998848,
+                    'old' => 9998849,
+                    'active' => true,
+                ]
+            );
+        }
+    " || true
+fi
+
+# 7. Limpar caches do Laravel / i-Educar
+echo -e "${BLUE}[6/6] Limpando caches da aplicação...${NC}"
 if [ -f "artisan" ]; then
     php artisan optimize:clear || true
     php artisan config:clear || true

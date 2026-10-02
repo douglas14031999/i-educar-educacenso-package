@@ -24,7 +24,7 @@ return new class () extends Migration {
                 'description' => 'Importação educacenso',
                 'link' => '/educacenso/import-registrations/create',
                 'order' => 0,
-                'type' => 3,
+                'type' => 1,
                 'parent_old' => 9998848,
                 'old' => 9998849,
                 'active' => true,
