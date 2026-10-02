@@ -2,7 +2,6 @@
 
 namespace iEducar\Packages\Educacenso\Services\Version2026;
 
-use iEducar\Packages\Educacenso\Services\Version2020\Registro40Import;
 use iEducar\Packages\Educacenso\Services\Version2022\ImportService as ImportServiceVersion2022;
 
 class ImportService extends ImportServiceVersion2022

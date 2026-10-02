@@ -2,32 +2,28 @@
 
 namespace iEducar\Packages\Educacenso\Services\Version2026;
 
-use App\Models\Educacenso\Registro50;
 use App\Models\Educacenso\RegistroEducacenso;
 use Illuminate\Support\Facades\DB;
-use iEducar\Packages\Educacenso\Services\Version2025\Models\Registro50Model;
-use iEducar\Packages\Educacenso\Services\Version2025\Registro50Import as Registro50Import2025;
+use iEducar\Packages\Educacenso\Services\Version2020\Registro40Import as Registro40Import2020;
 
-class Registro50Import extends Registro50Import2025
+class Registro40Import extends Registro40Import2020
 {
     public function import(RegistroEducacenso $model, $year, $user): void
     {
         parent::import($model, $year, $user);
 
-        $employee = parent::getEmployee();
-        $schoolClass = $this->getSchoolClass();
+        $school = $this->getSchool();
+        $employee = $this->getEmployee();
 
-        if ($employee && $schoolClass) {
-            $schoolId = $schoolClass->ref_ref_cod_escola;
-            $institutionId = $schoolClass->school?->ref_cod_instituicao ?: 1;
-            $periodo = $schoolClass->turma_turno_id ?: 1;
+        if ($school && $employee) {
+            $schoolId = $school->getKey();
+            $institutionId = $school->ref_cod_instituicao ?: 1;
             $userId = $user->id ?? 1;
 
             $alocacaoExistente = DB::table('pmieducar.servidor_alocacao')
                 ->where('ref_cod_servidor', $employee->getKey())
                 ->where('ref_cod_escola', $schoolId)
                 ->where('ano', $year)
-                ->where('periodo', $periodo)
                 ->where('ativo', 1)
                 ->exists();
 
@@ -39,23 +35,12 @@ class Registro50Import extends Registro50Import2025
                     'ref_cod_servidor' => $employee->getKey(),
                     'data_cadastro' => now(),
                     'ativo' => 1,
-                    'carga_horaria' => '20:00:00',
-                    'periodo' => $periodo,
+                    'carga_horaria' => '40:00:00',
+                    'periodo' => 1,
                     'ano' => $year,
                     'data_admissao' => now()->toDateString(),
                 ]);
             }
         }
-    }
-
-    /**
-     * @return Registro50|RegistroEducacenso
-     */
-    public static function getModel($arrayColumns)
-    {
-        $registro = new Registro50Model();
-        $registro->hydrateModel($arrayColumns);
-
-        return $registro;
     }
 }
