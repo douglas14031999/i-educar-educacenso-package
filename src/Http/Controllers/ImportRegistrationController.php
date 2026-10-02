@@ -60,7 +60,7 @@ class ImportRegistrationController extends Controller
 
             $importFileService->handleFile($file);
         } catch (ImportException $exception) {
-            return redirect('educacenso-import-registrations.index')->with('error', $exception->getMessage());
+            return redirect()->route('educacenso-import-registrations.index')->with('error', $exception->getMessage());
         }
 
         return redirect()->route('educacenso-import-registrations.index')->with('success', 'Importação realizada com sucesso!');

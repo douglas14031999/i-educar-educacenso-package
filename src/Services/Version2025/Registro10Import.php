@@ -133,7 +133,7 @@ class Registro10Import extends Registro10Import2024
 
     protected function getArrayAreasExternas()
     {
-        $arrayAreasExternas = parent::getArrayRecursosAcessibilidade();
+        $arrayAreasExternas = parent::getArrayAreasExternas();
 
         $arrayAreas = \transformStringFromDBInArray($arrayAreasExternas) ?: [];
 

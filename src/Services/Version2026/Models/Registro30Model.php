@@ -1,6 +1,6 @@
 <?php
 
-namespace iEducar\Packages\Educacenso\Services\Version2025\Models;
+namespace iEducar\Packages\Educacenso\Services\Version2026\Models;
 
 use App\Models\Educacenso\Registro30;
 use iEducar\Modules\Educacenso\Model\Escolaridade;
@@ -141,24 +141,26 @@ class Registro30Model extends Registro30
         $this->posGraduacaoNaoPossui = $arrayColumns[88];
         $this->formacaoContinuadaCreche = $arrayColumns[89];
         $this->formacaoContinuadaPreEscola = $arrayColumns[90];
-        $this->formacaoContinuadaAnosIniciaisFundamental = $arrayColumns[91];
-        $this->formacaoContinuadaAnosFinaisFundamental = $arrayColumns[92];
-        $this->formacaoContinuadaEnsinoMedio = $arrayColumns[93];
-        $this->formacaoContinuadaEducacaoJovensAdultos = $arrayColumns[94];
-        $this->formacaoContinuadaEducacaoEspecial = $arrayColumns[95];
-        $this->formacaoContinuadaEducacaoIndigena = $arrayColumns[96];
-        $this->formacaoContinuadaEducacaoCampo = $arrayColumns[97];
-        $this->formacaoContinuadaEducacaoAmbiental = $arrayColumns[98];
-        $this->formacaoContinuadaEducacaoDireitosHumanos = $arrayColumns[99];
-        $this->formacaoContinuadaEducacaoBilingueSurdos = $arrayColumns[100];
-        $this->formacaoContinuadaEducacaoTecnologiaInformacaoComunicacao = $arrayColumns[101];
-        $this->formacaoContinuadaGeneroDiversidadeSexual = $arrayColumns[102];
-        $this->formacaoContinuadaDireitosCriancaAdolescente = $arrayColumns[103];
-        $this->formacaoContinuadaEducacaoRelacoesEticoRaciais = $arrayColumns[104];
-        $this->formacaoContinuadaEducacaoGestaoEscolar = $arrayColumns[105];
-        $this->formacaoContinuadaEducacaoOutros = $arrayColumns[106];
-        $this->formacaoContinuadaEducacaoNenhum = $arrayColumns[107];
-        $this->email = $arrayColumns[108];
+        $this->formacaoContinuadaAlfabetizacao = $arrayColumns[91];
+        $this->formacaoContinuadaAnosIniciaisFundamental = $arrayColumns[92];
+        $this->formacaoContinuadaAnosFinaisFundamental = $arrayColumns[93];
+        $this->formacaoContinuadaEnsinoMedio = $arrayColumns[94];
+        $this->formacaoContinuadaEducacaoJovensAdultos = $arrayColumns[95];
+        $this->formacaoContinuadaEducacaoEspecial = $arrayColumns[96];
+        $this->formacaoContinuadaEducacaoIndigena = $arrayColumns[97];
+        $this->formacaoContinuadaEducacaoCampo = $arrayColumns[98];
+        $this->formacaoContinuadaEducacaoAmbiental = $arrayColumns[99];
+        $this->formacaoContinuadaEducacaoDireitosHumanos = $arrayColumns[100];
+        $this->formacaoContinuadaEducacaoBilingueSurdos = $arrayColumns[101];
+        $this->formacaoContinuadaEducacaoTecnologiaInformacaoComunicacao = $arrayColumns[102];
+        $this->formacaoContinuadaEducacaoIntegralTempoIntegral = $arrayColumns[103];
+        $this->formacaoContinuadaGeneroDiversidadeSexual = $arrayColumns[104];
+        $this->formacaoContinuadaDireitosCriancaAdolescente = $arrayColumns[105];
+        $this->formacaoContinuadaEducacaoRelacoesEticoRaciais = $arrayColumns[106];
+        $this->formacaoContinuadaEducacaoGestaoEscolar = $arrayColumns[107];
+        $this->formacaoContinuadaEducacaoOutros = $arrayColumns[108];
+        $this->formacaoContinuadaEducacaoNenhum = $arrayColumns[109];
+        $this->email = $arrayColumns[110];
 
         if (in_array((int) $this->escolaridade, [Escolaridade::EDUCACAO_SUPERIOR, Escolaridade::ENSINO_MEDIO], true)) {
             $this->tipos[self::TIPO_TEACHER] = true;

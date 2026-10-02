@@ -6,7 +6,7 @@ use App\Models\Educacenso\Registro20;
 use iEducar\Modules\Educacenso\Model\FormaOrganizacaoTurma;
 use iEducar\Modules\Educacenso\Model\OrganizacaoCurricular;
 use iEducar\Modules\Educacenso\Model\TipoItinerarioFormativo;
-use iEducar\Packages\Educacenso\Services\Version2019\Registro20Import;
+use iEducar\Packages\Educacenso\Services\Version2025\Registro20Import;
 use Illuminate\Validation\ValidationException;
 
 class Registro20Model extends Registro20
@@ -86,7 +86,7 @@ class Registro20Model extends Registro20
         $this->tipoCursoIntinerario = $arrayColumns[41];
         $this->codCursoProfissionalIntinerario = $arrayColumns[42];
 
-        $this->componentes = $this->getComponentesByImportFile(array_slice($arrayColumns, 42, 26));
+        $this->componentes = $this->getComponentesByImportFile(array_slice($arrayColumns, 42, 27));
         $this->classeComLinguaBrasileiraSinais = $arrayColumns[70];
     }
 
