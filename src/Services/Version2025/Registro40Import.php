@@ -20,19 +20,50 @@ class Registro40Import extends Registro40Import2020
             $institutionId = $school->ref_cod_instituicao ?: 1;
             $userId = $user->id ?? 1;
 
-            $alocacaoExistente = DB::table('pmieducar.servidor_alocacao')
+            $vinculoId = $this->getFuncionarioVinculoId($model->tipoVinculo);
+
+            $funcaoId = DB::table('pmieducar.funcao')
+                ->where('ref_cod_instituicao', $institutionId)
+                ->where(function ($q) {
+                    $q->where('nm_funcao', 'ilike', '%diretor%')
+                        ->orWhere('nm_funcao', 'ilike', '%gestor%');
+                })
+                ->where('ativo', 1)
+                ->value('cod_funcao');
+
+            $servidorFuncaoId = null;
+            if ($funcaoId) {
+                $servidorFuncao = DB::table('pmieducar.servidor_funcao')
+                    ->where('ref_cod_servidor', $employee->getKey())
+                    ->where('ref_cod_funcao', $funcaoId)
+                    ->first();
+
+                if (! $servidorFuncao) {
+                    $servidorFuncaoId = DB::table('pmieducar.servidor_funcao')->insertGetId([
+                        'ref_ref_cod_instituicao' => $institutionId,
+                        'ref_cod_servidor' => $employee->getKey(),
+                        'ref_cod_funcao' => $funcaoId,
+                    ], 'cod_servidor_funcao');
+                } else {
+                    $servidorFuncaoId = $servidorFuncao->cod_servidor_funcao;
+                }
+            }
+
+            $alocacao = DB::table('pmieducar.servidor_alocacao')
                 ->where('ref_cod_servidor', $employee->getKey())
                 ->where('ref_cod_escola', $schoolId)
                 ->where('ano', $year)
                 ->where('ativo', 1)
-                ->exists();
+                ->first();
 
-            if (! $alocacaoExistente) {
+            if (! $alocacao) {
                 DB::table('pmieducar.servidor_alocacao')->insert([
                     'ref_ref_cod_instituicao' => $institutionId,
                     'ref_usuario_cad' => $userId,
                     'ref_cod_escola' => $schoolId,
                     'ref_cod_servidor' => $employee->getKey(),
+                    'ref_cod_servidor_funcao' => $servidorFuncaoId,
+                    'ref_cod_funcionario_vinculo' => $vinculoId,
                     'data_cadastro' => now(),
                     'ativo' => 1,
                     'carga_horaria' => '40:00:00',
@@ -40,7 +71,59 @@ class Registro40Import extends Registro40Import2020
                     'ano' => $year,
                     'data_admissao' => now()->toDateString(),
                 ]);
+            } else {
+                $updateData = [];
+                if (empty($alocacao->ref_cod_funcionario_vinculo) && $vinculoId) {
+                    $updateData['ref_cod_funcionario_vinculo'] = $vinculoId;
+                }
+                if (empty($alocacao->ref_cod_servidor_funcao) && $servidorFuncaoId) {
+                    $updateData['ref_cod_servidor_funcao'] = $servidorFuncaoId;
+                }
+                if (! empty($updateData)) {
+                    DB::table('pmieducar.servidor_alocacao')
+                        ->where('ref_cod_servidor', $employee->getKey())
+                        ->where('ref_cod_escola', $schoolId)
+                        ->where('ano', $year)
+                        ->where('ativo', 1)
+                        ->update($updateData);
+                }
+            }
+
+            if ($vinculoId) {
+                DB::table('portal.funcionario')
+                    ->where('ref_cod_pessoa_fj', $employee->getKey())
+                    ->whereNull('ref_cod_funcionario_vinculo')
+                    ->update(['ref_cod_funcionario_vinculo' => $vinculoId]);
             }
         }
+    }
+
+    protected function getFuncionarioVinculoId($tipoVinculo): ?int
+    {
+        if (empty($tipoVinculo)) {
+            return null;
+        }
+
+        $tipoVinculo = (int) $tipoVinculo;
+
+        if ($tipoVinculo === 1) {
+            $id = DB::table('portal.funcionario_vinculo')
+                ->where('abreviatura', 'ilike', 'Efet%')
+                ->orWhere('nm_vinculo', 'ilike', '%efetiv%')
+                ->value('cod_funcionario_vinculo');
+
+            return $id ? (int) $id : 3;
+        }
+
+        if (in_array($tipoVinculo, [2, 3, 4], true)) {
+            $id = DB::table('portal.funcionario_vinculo')
+                ->where('abreviatura', 'ilike', 'Cont%')
+                ->orWhere('nm_vinculo', 'ilike', '%contrat%')
+                ->value('cod_funcionario_vinculo');
+
+            return $id ? (int) $id : 4;
+        }
+
+        return null;
     }
 }
