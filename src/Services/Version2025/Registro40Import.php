@@ -3,6 +3,8 @@
 namespace iEducar\Packages\Educacenso\Services\Version2025;
 
 use App\Models\Educacenso\RegistroEducacenso;
+use App\Models\Employee;
+use App\Models\EmployeeInep;
 use Illuminate\Support\Facades\DB;
 use iEducar\Packages\Educacenso\Services\Version2020\Registro40Import as Registro40Import2020;
 
@@ -125,5 +127,21 @@ class Registro40Import extends Registro40Import2020
         }
 
         return null;
+    }
+
+    protected function getEmployee(): ?Employee
+    {
+        $inepNumber = $this->model->inepGestor;
+        if (empty($inepNumber)) {
+            return null;
+        }
+
+        $employeeInep = EmployeeInep::where('cod_docente_inep', $inepNumber)->first();
+
+        if (empty($employeeInep)) {
+            return null;
+        }
+
+        return $employeeInep->employee ?? null;
     }
 }

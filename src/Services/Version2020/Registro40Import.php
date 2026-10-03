@@ -44,7 +44,7 @@ class Registro40Import extends Registro40Import2019
         return $registro;
     }
 
-    private function getEmployee(): ?Employee
+    protected function getEmployee(): ?Employee
     {
         $inepNumber = $this->model->inepGestor;
         if (empty($inepNumber)) {

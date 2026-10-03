@@ -62,7 +62,7 @@ class Registro40Import implements RegistroImportInterface
         return $registro;
     }
 
-    private function getEmployee(): ?Employee
+    protected function getEmployee(): ?Employee
     {
         $inepNumber = $this->model->inepGestor;
         $employeeInep = EmployeeInep::where('cod_docente_inep', $inepNumber)->first();
